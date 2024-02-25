@@ -1,56 +1,80 @@
 const image = document.querySelector(".blue");
 
-let imageWidth;
-let imageHeight;
+const scrollDiv = document.querySelector("#scroll");
+
+let clicking = false;
+let previousX;
+let previousY;
+
+let determinantDimension;
+let recessiveDimension;
 
 const findDeterminantDimension = () => {
-    imageWidth = image.naturalWidth;
-    imageHeight = image.naturalHeight;
-    windowWidth = window.innerWidth;
-    windowHeight = window.innerHeight;
+    const isHeightLarger = ((window.innerWidth / window.innerHeight)
+        > (image.naturalWidth / image.naturalHeight));
 
-    if ((windowWidth / windowHeight) > (imageWidth / imageHeight)) {
-        image.style.height = "100%"
-    } else {
-        image.style.width = "100%"
-    }
+    determinantDimension = isHeightLarger ? "height" : "width";
+    recessiveDimension = isHeightLarger ? "width" : "height";
 }
 
-image.onload = findDeterminantDimension;
+const containImageInWindow = () => {
+    image.style[determinantDimension] = "100%";
+    image.style[recessiveDimension] = "auto";
+}
+
+image.onload = () => {
+    findDeterminantDimension();
+    containImageInWindow();
+};
+window.addEventListener("resize", () => {
+    findDeterminantDimension();
+    containImageInWindow()
+});
+
+const zoom = (x, y, zoomAmount) => {
+    const { scrollLeft, scrollTop } = scrollDiv;
+    // Compute zoom logic
+    const currentZoom = image.style[determinantDimension].slice(0, -1);
+    const newZoom = Math.min(1000, Math.max(currentZoom * zoomAmount, 100));
+    const zoomRatio = newZoom / currentZoom;
+    // Zoom in/out
+    image.style[determinantDimension] = `${newZoom}%`
+    // Rescroll image
+    scrollDiv.scrollLeft = ((scrollLeft + x) * zoomRatio) - x;
+    scrollDiv.scrollTop = ((scrollTop + y) * zoomRatio) - y;
+}
+
+document.querySelector("#zoom").addEventListener("click", () => {
+    zoom(window.innerWidth / 2, window.innerHeight / 2, 1.05)
+})
+
+document.addEventListener("wheel", (e) => {
+    if (!e.shiftKey) {
+        return;
+    }
+    zoom(e.clientX, e.clientY, Math.sign(e.deltaY) < 0 ? 1.05 : 1 / 1.05,)
+});
 
 
+image.addEventListener("dblclick", (e) => {
+    image.style[determinantDimension] = "100%";
+});
 
-
-
-const scrollDiv = document.querySelector("#scroll");
-var clicking = false;
-var previousX;
-var previousY;
 
 scrollDiv.addEventListener("mousedown", (e) => {
-    console.log("mousedown");
     e.preventDefault();
     previousX = e.clientX;
     previousY = e.clientY;
     clicking = true;
-    console.log(previousX);
-    console.log(previousY);
-    console.log(clicking);
 });
 
 document.addEventListener("mouseup", (e) => {
-    console.log("mouseup");
     clicking = false;
-    console.log(clicking);
 });
 
 scrollDiv.addEventListener("mousemove", (e) => {
     if (clicking) {
         e.preventDefault();
-        var directionX = (previousX - e.clientX) > 0 ? 1 : -1;
-        var directionY = (previousY - e.clientY) > 0 ? 1 : -1;
-        // scrollDiv.scrollLeft = scrollDiv.scrollLeft + 10 * directionX;
-        // scrollDiv.scrollTop = scrollDiv.scrollTop + 10 * directionY;
         scrollDiv.scrollLeft = scrollDiv.scrollLeft + (previousX - e.clientX);
         scrollDiv.scrollTop = scrollDiv.scrollTop + (previousY - e.clientY);
         previousX = e.clientX;
@@ -61,6 +85,5 @@ scrollDiv.addEventListener("mousemove", (e) => {
 
 
 scrollDiv.addEventListener("mouseleave", (e) => {
-    console.log("mouseleave");
     clicking = false;
 });

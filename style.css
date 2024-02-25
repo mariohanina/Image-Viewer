@@ -4,6 +4,8 @@
 
 button {
     position: absolute;
+    top: 0;
+    left: 0;
 }
 
 img {
@@ -14,9 +16,21 @@ img {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
+
+    align-self: center;
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
 }
 
 .blue {
-    width: auto;
-    height: auto;
+    transform-origin: 0 0;
+    /* width: auto;
+    height: auto; */
+    min-height: 100%;
+    object-fit: contain;
+    display: block;
+    margin: auto;
+    /* width: 100%; */
+    /* height: 100%; */
 }
