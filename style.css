@@ -1,0 +1,22 @@
+* {
+    margin: 0;
+}
+
+button {
+    position: absolute;
+}
+
+img {
+    vertical-align: bottom;
+}
+
+#scroll {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.blue {
+    width: auto;
+    height: auto;
+}
