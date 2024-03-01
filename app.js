@@ -112,6 +112,7 @@ if (osName !== "Mobile") {
     scrollDiv.addEventListener("mouseleave", (e) => {
         clicking = false;
     });
+} else {
+    document.querySelector("#zoom").style.backgroundColor = "blue";
 }
 
-document.querySelector("#zoom").style.backgroundColor = "blue";
