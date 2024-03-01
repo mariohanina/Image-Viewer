@@ -17,7 +17,7 @@ let recessiveDimension;
 // });
 
 
-const osName = function deviceType() {
+function deviceType() {
     var OSName = "Mobile";
     if (navigator.appVersion.indexOf("Win") != -1 && navigator.appVersion.indexOf("Phone") === -1) OSName = "Windows";
     if (navigator.appVersion.indexOf("Macintosh") != -1) OSName = "MacOS";
@@ -28,6 +28,8 @@ const osName = function deviceType() {
     if (navigator.appVersion.indexOf("Slerp") != -1) OSName = "bot";
     return OSName;
 }
+
+const osName = deviceType();
 
 
 if (osName !== "Mobile") {
