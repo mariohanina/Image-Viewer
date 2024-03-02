@@ -14,11 +14,20 @@ img {
 .scroll-mobile {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
+}
+
+#image-container {
+    transform-origin: 0 0;
+    flex-grow: 1;
+    max-width: 100vw;
+    max-height: 100vh;
 }
 
 #image {
-    transform-origin: 0 0;
     max-width: 100vw;
+    min-width: 100vw;
     max-height: 100vh;
+    min-height: 100vh;
+    object-fit: contain;
 }

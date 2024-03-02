@@ -6,50 +6,18 @@ let clicking = false;
 let touching = false;
 let previousX;
 let previousY;
-image.style.scale = "1";
-
-function deviceType() {
-    let OSName = "Mobile";
-    if (navigator.appVersion.indexOf("Win") != -1 && navigator.appVersion.indexOf("Phone") === -1) OSName = "Windows";
-    if (navigator.appVersion.indexOf("Macintosh") != -1) OSName = "MacOS";
-    if (navigator.appVersion.indexOf("X11") != -1) OSName = "UNIX";
-    if (navigator.appVersion.indexOf("Linux") != -1 && navigator.appVersion.indexOf("Android") === -1) OSName = "Linux";
-    if (navigator.appVersion.indexOf("facebook.com") != -1) OSName = "facebook";
-    if (navigator.appVersion.indexOf("bot") != -1) OSName = "bot";
-    if (navigator.appVersion.indexOf("Slerp") != -1) OSName = "bot";
-    return OSName;
-}
-
-const osName = deviceType();
-console.log(osName);
-
-const centerImage = () => {
-    const topMargin = Math.max(0, (window.innerHeight -
-        (image.clientHeight * image.style.scale)) / 2);
-
-    const leftMargin = Math.max(0, (window.innerWidth -
-        (image.clientWidth * image.style.scale)) / 2);
-
-    image.style.marginTop = `${topMargin}px`;
-    image.style.marginLeft = `${leftMargin}px`;
-}
-
-if (osName === "Mobile") {
-    scrollDiv.classList.add("scroll-mobile")
-} else {
-    image.onload = centerImage;
-    window.addEventListener("resize", centerImage);
-}
+let maxDimension = 100;
 
 const zoom = (x, y, zoomAmount) => {
     const { scrollLeft, scrollTop } = scrollDiv;
 
-    const currentZoom = image.style.scale;
-    const newZoom = Math.min(10, Math.max(currentZoom * zoomAmount, 1));
+    const currentZoom = maxDimension;
+    const newZoom = Math.min(500, Math.max(currentZoom * zoomAmount, 100));
     const zoomRatio = newZoom / currentZoom;
 
-    image.style.scale = newZoom;
-    centerImage();
+    maxDimension = newZoom;
+    image.style.maxWidth = `${maxDimension}vw`;
+    image.style.maxHeight = `${maxDimension}vh`;
 
     scrollDiv.scrollLeft = ((scrollLeft + x) * zoomRatio) - x;
     scrollDiv.scrollTop = ((scrollTop + y) * zoomRatio) - y;
@@ -70,9 +38,11 @@ image.addEventListener("dblclick", (e) => {
     if (touching) {
         return;
     }
-    eventFired.innerText = "dblclick";
-    image.style.scale = "1";
-    centerImage();
+    for (let index = 5; index < (35 * 5); index += 5) {
+        setTimeout(() => {
+            zoom(e.clientX, e.clientY, 1 / 1.05)
+        }, index)
+    }
 });
 
 
@@ -86,10 +56,6 @@ scrollDiv.addEventListener("mousedown", (e) => {
     previousY = e.clientY;
     clicking = true;
 });
-
-// document.addEventListener("touchend", (e) => {
-//     touching = false
-// });
 
 document.addEventListener("mouseup", (e) => {
     clicking = false;
