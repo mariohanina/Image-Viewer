@@ -24,7 +24,7 @@ img {
 }
 
 .blue {
-    transform-origin: 0 0;
+    /* transform-origin: 0 0; */
     /* width: auto;
     height: auto; */
     min-height: 100%;
