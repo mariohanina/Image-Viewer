@@ -9,6 +9,9 @@ img {
 #scroll {
     min-height: 100vh;
     overflow: hidden;
+}
+
+.scroll-mobile {
     display: flex;
     justify-content: center;
     align-items: center;

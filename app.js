@@ -8,6 +8,21 @@ let previousX;
 let previousY;
 image.style.scale = "1";
 
+function deviceType() {
+    let OSName = "Mobile";
+    if (navigator.appVersion.indexOf("Win") != -1 && navigator.appVersion.indexOf("Phone") === -1) OSName = "Windows";
+    if (navigator.appVersion.indexOf("Macintosh") != -1) OSName = "MacOS";
+    if (navigator.appVersion.indexOf("X11") != -1) OSName = "UNIX";
+    if (navigator.appVersion.indexOf("Linux") != -1 && navigator.appVersion.indexOf("Android") === -1) OSName = "Linux";
+    if (navigator.appVersion.indexOf("facebook.com") != -1) OSName = "facebook";
+    if (navigator.appVersion.indexOf("bot") != -1) OSName = "bot";
+    if (navigator.appVersion.indexOf("Slerp") != -1) OSName = "bot";
+    return OSName;
+}
+
+const osName = deviceType();
+console.log(osName);
+
 const centerImage = () => {
     const topMargin = Math.max(0, (window.innerHeight -
         (image.clientHeight * image.style.scale)) / 2);
@@ -19,8 +34,12 @@ const centerImage = () => {
     image.style.marginLeft = `${leftMargin}px`;
 }
 
-image.onload = centerImage;
-window.addEventListener("resize", centerImage);
+if (osName === "Mobile") {
+    scrollDiv.classList.add("scroll-mobile")
+} else {
+    image.onload = centerImage;
+    window.addEventListener("resize", centerImage);
+}
 
 const zoom = (x, y, zoomAmount) => {
     const { scrollLeft, scrollTop } = scrollDiv;
