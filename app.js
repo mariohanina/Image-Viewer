@@ -1,153 +1,88 @@
-const image = document.querySelector(".blue");
-
+const image = document.querySelector("#image");
 const scrollDiv = document.querySelector("#scroll");
 
 let clicking = false;
+let touching = false;
 let previousX;
 let previousY;
+image.style.scale = "1";
 
-let determinantDimension;
-let recessiveDimension;
+const centerImage = () => {
+    const topMargin = Math.max(0, (window.innerHeight -
+        (image.clientHeight * image.style.scale)) / 2);
 
+    const leftMargin = Math.max(0, (window.innerWidth -
+        (image.clientWidth * image.style.scale)) / 2);
 
-
-const currentEvent = document.querySelector("#currentEvent");
-const scrollTopOnScreen = document.querySelector("#scrollTop");
-const scrollLeftOnScreen = document.querySelector("#scrollLeft");
-const dd = document.querySelector("#width");
-const newDd = document.querySelector("#newDd");
-// const height = document.querySelector("#height");
-
-
-// $(document).ready(function () {
-//     if (deviceType() == "Mobile")
-//         $('#Grid').mixitup('toGrid');
-// });
-
-
-// function deviceType() {
-//     var OSName = "Mobile";
-//     if (navigator.appVersion.indexOf("Win") != -1 && navigator.appVersion.indexOf("Phone") === -1) OSName = "Windows";
-//     if (navigator.appVersion.indexOf("Macintosh") != -1) OSName = "MacOS";
-//     if (navigator.appVersion.indexOf("X11") != -1) OSName = "UNIX";
-//     if (navigator.appVersion.indexOf("Linux") != -1 && navigator.appVersion.indexOf("Android") === -1) OSName = "Linux";
-//     if (navigator.appVersion.indexOf("facebook.com") != -1) OSName = "facebook";
-//     if (navigator.appVersion.indexOf("bot") != -1) OSName = "bot";
-//     if (navigator.appVersion.indexOf("Slerp") != -1) OSName = "bot";
-//     return OSName;
-// }
-
-// const osName = deviceType();
-
-
-// if (osName !== "Mobile") {
-//     document.querySelector("#zoom").style.backgroundColor = "red";
-
-
-const findDeterminantDimension = () => {
-    const isHeightLarger = ((window.innerWidth / window.innerHeight)
-        > (image.naturalWidth / image.naturalHeight));
-
-    determinantDimension = isHeightLarger ? "height" : "width";
-    recessiveDimension = isHeightLarger ? "width" : "height";
+    image.style.marginTop = `${topMargin}px`;
+    image.style.marginLeft = `${leftMargin}px`;
 }
 
-const containImageInWindow = () => {
-    image.style[determinantDimension] = "100%";
-    image.style[recessiveDimension] = "auto";
-}
-
-image.onload = () => {
-    findDeterminantDimension();
-    containImageInWindow();
-};
-window.addEventListener("resize", () => {
-    currentEvent.innerText = ("resize");
-    findDeterminantDimension();
-    containImageInWindow()
-});
+image.onload = centerImage;
+window.addEventListener("resize", centerImage);
 
 const zoom = (x, y, zoomAmount) => {
-    currentEvent.innerText = ("zoom");
     const { scrollLeft, scrollTop } = scrollDiv;
-    scrollLeftOnScreen.innerText = (scrollLeft);
-    scrollTopOnScreen.innerText = (scrollTop);
-    // Compute zoom logic
-    const currentZoom = image.style[determinantDimension].slice(0, -1);
-    const newZoom = Math.min(1000, Math.max(currentZoom * zoomAmount, 100));
+
+    const currentZoom = image.style.scale;
+    const newZoom = Math.min(10, Math.max(currentZoom * zoomAmount, 1));
     const zoomRatio = newZoom / currentZoom;
-    dd.innerText = (currentZoom); newDd.innerText = (newZoom);
-    // Zoom in/out
-    image.style[determinantDimension] = `${newZoom}%`
-    // Rescroll image
+
+    image.style.scale = newZoom;
+    centerImage();
+
     scrollDiv.scrollLeft = ((scrollLeft + x) * zoomRatio) - x;
     scrollDiv.scrollTop = ((scrollTop + y) * zoomRatio) - y;
-    scrollLeftOnScreen.innerText = scrollDiv.scrollLeft;
-    scrollTopOnScreen.innerText = scrollDiv.scrollTop;
 }
 
-// document.querySelector("#zoom").addEventListener("click", () => {
-//     console.log("click");
-//     zoom(window.innerWidth / 2, window.innerHeight / 2, 1.05)
-// })
-
 document.addEventListener("wheel", (e) => {
-    currentEvent.innerText = ("wheel");
-    if (!e.shiftKey) {
-        currentEvent.innerText = ("wheel && shiftKey == false");
+    if (touching) {
         return;
     }
-    zoom(e.clientX, e.clientY, Math.sign(e.deltaY) < 0 ? 1.05 : 1 / 1.05,)
+    if (e.shiftKey || e.deltaY > 50 || e.deltaY < -50) {
+        zoom(e.clientX, e.clientY, Math.sign(e.deltaY) < 0 ? 1.05 : 1 / 1.05,)
+    }
 });
 
 
 image.addEventListener("dblclick", (e) => {
-    currentEvent.innerText = ("dblclick");
-    image.style[determinantDimension] = "100%";
-    scrollLeftOnScreen.innerText = scrollDiv.scrollLeft;
-    scrollTopOnScreen.innerText = scrollDiv.scrollTop;
-    dd.innerText = (image.style[determinantDimension].slice(0, -1));
+    // if (touching) {
+    //     console.log("dbtouch");
+    // }
+    image.style.scale = "1";
+    centerImage();
 });
 
 
+document.addEventListener("touchstart", (e) => {
+    touching = true
+});
+
 scrollDiv.addEventListener("mousedown", (e) => {
-    currentEvent.innerText = ("mousedown");
-    scrollLeftOnScreen.innerText = scrollDiv.scrollLeft;
-    scrollTopOnScreen.innerText = scrollDiv.scrollTop;
-    dd.innerText = (image.style[determinantDimension].slice(0, -1));
     e.preventDefault();
     previousX = e.clientX;
     previousY = e.clientY;
     clicking = true;
 });
 
+document.addEventListener("touchend", (e) => {
+    touching = false
+});
+
 document.addEventListener("mouseup", (e) => {
-    currentEvent.innerText = ("mouseup");
     clicking = false;
 });
 
 scrollDiv.addEventListener("mousemove", (e) => {
-    currentEvent.innerText = ("mousemove");
     if (clicking) {
-        currentEvent.innerText = ("mousemove && clicking === true");
         e.preventDefault();
         scrollDiv.scrollLeft = scrollDiv.scrollLeft + (previousX - e.clientX);
         scrollDiv.scrollTop = scrollDiv.scrollTop + (previousY - e.clientY);
         previousX = e.clientX;
         previousY = e.clientY;
-        scrollLeftOnScreen.innerText = scrollDiv.scrollLeft;
-        scrollTopOnScreen.innerText = scrollDiv.scrollTop;
     }
 });
 
-
-
 scrollDiv.addEventListener("mouseleave", (e) => {
-    currentEvent.innerText = ("mouseleave");
     clicking = false;
 });
-
-// } else {
-//     document.querySelector("#zoom").style.backgroundColor = "blue";
-// }
-
