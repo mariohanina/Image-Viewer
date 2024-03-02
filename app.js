@@ -68,9 +68,9 @@ scrollDiv.addEventListener("mousedown", (e) => {
     clicking = true;
 });
 
-document.addEventListener("touchend", (e) => {
-    touching = false
-});
+// document.addEventListener("touchend", (e) => {
+//     touching = false
+// });
 
 document.addEventListener("mouseup", (e) => {
     clicking = false;
