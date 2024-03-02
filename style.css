@@ -9,13 +9,13 @@ img {
 #scroll {
     min-height: 100vh;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #image {
-    /* display: block;
-    margin: auto; */
     transform-origin: 0 0;
     max-width: 100vw;
     max-height: 100vh;
-    scale: 1.5;
 }
