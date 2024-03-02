@@ -1,5 +1,6 @@
 const image = document.querySelector("#image");
 const scrollDiv = document.querySelector("#scroll");
+const eventFired = document.querySelector("#eventFired");
 
 let clicking = false;
 let touching = false;
@@ -22,6 +23,7 @@ image.onload = centerImage;
 window.addEventListener("resize", centerImage);
 
 const zoom = (x, y, zoomAmount) => {
+    eventFired.innerText = "zoom";
     const { scrollLeft, scrollTop } = scrollDiv;
 
     const currentZoom = image.style.scale;
@@ -36,6 +38,7 @@ const zoom = (x, y, zoomAmount) => {
 }
 
 document.addEventListener("wheel", (e) => {
+    eventFired.innerText = "wheel";
     if (touching) {
         return;
     }
@@ -49,6 +52,7 @@ image.addEventListener("dblclick", (e) => {
     // if (touching) {
     //     console.log("dbtouch");
     // }
+    eventFired.innerText = "dblclick";
     image.style.scale = "1";
     centerImage();
 });
@@ -74,6 +78,7 @@ document.addEventListener("mouseup", (e) => {
 });
 
 scrollDiv.addEventListener("mousemove", (e) => {
+    eventFired.innerText = "mousemove";
     if (clicking) {
         e.preventDefault();
         scrollDiv.scrollLeft = scrollDiv.scrollLeft + (previousX - e.clientX);
