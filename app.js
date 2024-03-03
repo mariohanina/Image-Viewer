@@ -1,41 +1,47 @@
+// Html elements
 const image = document.querySelector("#image");
 const scrollDiv = document.querySelector("#scroll");
 
+// Variable declarations
 let clicking = false;
 let touching = false;
 let previousX;
 let previousY;
 let maxDimension = 100;
-let detDim;
-let recDim;
+let mainDim;
+let npcDim;
 
+// If image is taller than window, height is the main dimensions.
+// If image is wider than window, width is the main dimension.
 function findDims() {
-    const isHeightLarger = ((window.innerWidth / window.innerHeight)
+    const { innerWidth, innerHeight } = window;
+    const isHeightLarger = ((innerWidth / innerHeight)
         > (image.naturalWidth / image.naturalHeight));
 
-    detDim = isHeightLarger ? "height" : "width";
-    recDim = isHeightLarger ? "width" : "height";
+    mainDim = isHeightLarger ? "height" : "width";
+    npcDim = isHeightLarger ? "width" : "height";
 
-    zoom(window.innerWidth / 2, window.innerHeight / 2, 1)
+    zoom(innerWidth / 2, innerHeight / 2, 1);
 }
 
-image.onload = findDims;
-window.addEventListener("resize", findDims);
-
-
+// Zoom and then rescroll
 const zoom = (x, y, zoomAmount) => {
+    // Save the current scroll location of the image
     const { scrollLeft, scrollTop } = scrollDiv;
 
+    // Make sure zoom is within limits
     const currentZoom = maxDimension;
     const newZoom = Math.min(1000, Math.max(currentZoom * zoomAmount, 100));
     const zoomRatio = newZoom / currentZoom;
-
     maxDimension = newZoom;
+
+    // Apply zoom to html element
     image.style.maxWidth = `${maxDimension}vw`;
     image.style.maxHeight = `${maxDimension}vh`;
-    image.style[detDim] = `${maxDimension}v${detDim[0]}`;
-    image.style[recDim] = `auto`;
+    image.style[mainDim] = `${maxDimension}v${mainDim[0]}`;
+    image.style[npcDim] = `auto`;
 
+    // Scroll the image
     scrollDiv.scrollLeft = ((scrollLeft + x) * zoomRatio) - x;
     scrollDiv.scrollTop = ((scrollTop + y) * zoomRatio) - y;
 }
@@ -47,6 +53,8 @@ document.addEventListener("wheel", (e) => {
     }
 });
 
+image.onload = findDims;
+window.addEventListener("resize", findDims);
 
 image.addEventListener("dblclick", (e) => {
     if (touching) return
@@ -57,10 +65,14 @@ image.addEventListener("dblclick", (e) => {
     }
 });
 
-
-document.addEventListener("touchstart", (e) => {
-    touching = true
-});
+// document.addEventListener("touchstart", (e) => {
+//     touching = true;
+//     console.log(touching);
+// });
+// document.addEventListener("touchend", (e) => {
+//     touching = false;
+//     console.log(touching);
+// });
 
 scrollDiv.addEventListener("mousedown", (e) => {
     e.preventDefault();
