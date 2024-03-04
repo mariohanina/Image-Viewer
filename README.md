@@ -10,7 +10,9 @@ This app was created to display images on web browsers, it includes three main f
 <br />
 3- Restoring the default position of the image: making the image fit inside the window of the web browser.
 <br />
+<br />
 On devices with a touch screen, those functionalities are present by default, therefore the app ignores any touch events.
+You can visit the app to try it out:  https://mariohanina.github.io/Image-Viewer/
 <br />
 <br />
 <br />
