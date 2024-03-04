@@ -1,6 +1,6 @@
 // Html elements
 const image = document.querySelector("#image");
-const scrollDiv = document.querySelector("#scroll");
+const scrollDiv = document.querySelector("#scrollable-container");
 
 // Variable declarations
 let clicking = false;
@@ -46,18 +46,19 @@ const zoom = (x, y, zoomAmount) => {
     scrollDiv.scrollTop = ((scrollTop + y) * zoomRatio) - y;
 }
 
+// Recalculate the main and npc dimensions when images loads or screen resizes
+image.onload = findDims;
+window.addEventListener("resize", findDims);
+
+// Add the zoom functionality to wheel events
 document.addEventListener("wheel", (e) => {
-    if (touching) return
-    if (e.shiftKey || e.deltaY > 50 || e.deltaY < -50) {
+    if (e.shiftKey || e.deltaY > 0 || e.deltaY < -50) {
         zoom(e.clientX, e.clientY, Math.sign(e.deltaY) < 0 ? 1.05 : 1 / 1.05,)
     }
 });
 
-image.onload = findDims;
-window.addEventListener("resize", findDims);
-
+// Gradually zoom out when user doubleclicks
 image.addEventListener("dblclick", (e) => {
-    if (touching) return
     for (let index = 3; index < (50 * 3); index += 3) {
         setTimeout(() => {
             zoom(e.clientX, e.clientY, 1 / 1.05)
@@ -65,28 +66,36 @@ image.addEventListener("dblclick", (e) => {
     }
 });
 
-// document.addEventListener("touchstart", (e) => {
-//     touching = true;
-//     console.log(touching);
-// });
-// document.addEventListener("touchend", (e) => {
-//     touching = false;
-//     console.log(touching);
-// });
-
-scrollDiv.addEventListener("mousedown", (e) => {
+// THE PANNING FUNCTIONALITY
+scrollDiv.addEventListener("pointerdown", (e) => {
+    if (!(e.pointerType === "mouse")) {
+        return
+    }
     e.preventDefault();
     previousX = e.clientX;
     previousY = e.clientY;
     clicking = true;
 });
 
-document.addEventListener("mouseup", (e) => {
+document.addEventListener("pointerup", (e) => {
+    if (!(e.pointerType === "mouse")) {
+        return
+    }
     clicking = false;
 });
 
-scrollDiv.addEventListener("mousemove", (e) => {
-    if (touching) return;
+scrollDiv.addEventListener("pointerleave", (e) => {
+    if (!(e.pointerType === "mouse")) {
+        return
+    }
+    clicking = false;
+});
+
+// Pan the image by scrolling
+scrollDiv.addEventListener("pointermove", (e) => {
+    if (!(e.pointerType === "mouse")) {
+        return
+    }
     if (clicking) {
         e.preventDefault();
         scrollDiv.scrollLeft = scrollDiv.scrollLeft + (previousX - e.clientX);
@@ -94,8 +103,4 @@ scrollDiv.addEventListener("mousemove", (e) => {
         previousX = e.clientX;
         previousY = e.clientY;
     }
-});
-
-scrollDiv.addEventListener("mouseleave", (e) => {
-    clicking = false;
 });
