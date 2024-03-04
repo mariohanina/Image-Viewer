@@ -1,7 +1,6 @@
 # The Image Viewer
 
-
-<pre>
+<br />
 This app was created to display images on web browsers, it includes three main functionalities:
 
 1- Zooming in/out: this is done using the scroll wheel of the mouse.
@@ -10,7 +9,6 @@ This app was created to display images on web browsers, it includes three main f
 
 On devices with a touch screen, those functionalities are present by default, therefore the app ignores any touch events.
 
-  
+<br />
 Author: Mario Hanina
 Copyright Notice: CC BY 4.0 DEED - https://creativecommons.org/licenses/by/4.0/
-</pre>
