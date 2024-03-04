@@ -1,7 +1,6 @@
 # The Image Viewer
 <br />
 <br />
-<br />
 This app was created to display images on web browsers, it includes three main functionalities:
 <br />
 <br />
