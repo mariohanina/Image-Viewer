@@ -1,7 +1,7 @@
 # The Image Viewer
 <br />
 <br />
-This app was created to display images on web browsers, it includes three main functionalities that work only when using a mouse:
+This app was created to allow images to being manipulated via a mouse when displayed on a web browser:
 <br />
 <br />
 1- Zooming in/out: this is done using the scroll wheel of the mouse.
