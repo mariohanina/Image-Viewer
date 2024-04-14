@@ -1,7 +1,7 @@
 # The Image Viewer
 <br />
 <br />
-This app was created to allow image manipulation (zooming in/out, panning) via a mouse when displayed on a web browser:
+This app was created to allow image manipulation (zooming in/out, panning) via a mouse when displayed on a web browser, the app also make the image "fit" inside the browser's window:
 <br />
 <br />
 1- Zooming in/out: this is done using the scroll wheel of the mouse.
